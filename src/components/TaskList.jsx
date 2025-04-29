@@ -55,8 +55,15 @@ const TaskList = () => {
                     <ListGroup.Item key={task.id} className={"d-flex justify-content-between align-items-center"}>
                         <div className={"bg-white"}>
                             <span className={"fw-bold"}>{task.title}</span>
+
+                            <p className={"mb-0 small text-muted"}>
+                                <strong>ID: </strong>{task.id}<br/>
+                                <strong>Criada em: </strong> {new Date(task.createdAt).toLocaleDateString()}
+                            </p>
+
                             <p className={"mb-0 small"}>{task.completed ? "Concluída" : "Pendente"}</p>
-                            <Button variant="danger" onClick={() => deleteTask(task.id)}>Deletar</Button>
+                            <Button variant="danger" onClick={() => deleteTask(task.id)}
+                                    className={"mt-2"}>Deletar</Button>
                         </div>
                     </ListGroup.Item>
                 ))}
