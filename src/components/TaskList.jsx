@@ -10,20 +10,23 @@ const TaskList = () => {
 
     /*quando for renderizado o componente, faz uma requisição para a API*/
     useEffect(() => {
-        axios
-            .get(API_URL)
-            .then(response => setTasks(response.data))
-            .catch(error => console.error("Erro ao buscar tarefas: ", error));
+        fetchTasks();
     }, []) /*[], executa apenas uma vez quando o componente é montado*/
 
+    const fetchTasks = () => {
+        axios.get(API_URL)
+            .then(response => setTasks(response.data))
+            .catch(error => console.error("Erro ao buscar tarefas: ", error));
+    }
     const addTask = () => {
         if (newTask.trim() === "") return;
 
         axios.post(API_URL, {title: newTask, completed: false})
-            .then(response => {
-            setTasks([...tasks, response.data]);
-            setNewTask("");
-        }).catch(error => console.error("Erro ao adicionar tarefa: ", error));
+            .then(() => {
+                setNewTask("");
+                fetchTasks();
+            })
+            .catch(error => console.error("Erro ao adicionar tarefa: ", error));
     }
 
     const deleteTask = (id) => {
