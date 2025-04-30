@@ -11,6 +11,7 @@ const TaskList = () => {
     const [newTask, setNewTask] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
+    /* useEffect que permite executar efeitos colaterais em componentes */
     useEffect(() => {
         fetchTasks();
     }, []) /*[], executa apenas uma vez quando o componente é montado*/
@@ -49,19 +50,27 @@ const TaskList = () => {
         }).catch(error => console.error("Erro ao deletar tarefa: ", error));
     }
 
+
+    const toggleTaskStatus = (id, currentStatus) => {
+        axios.patch(`${API_URL}`, {id: id, completed: !currentStatus})
+            .then(() => fetchTasks())
+            .catch(error => console.error("Erro ao atualizar tarefa: ", error));
+    }
+
+
     return (
         <Container className={"mt-5"}>
             <h2 className={"mb-4"}>Lista de Tarefas</h2>
 
             <Form className="d-flex flex-column mb-3">
                 <Form.Control className={"mb-2"}
-                    type="text"
-                    placeholder="Nova tarefa"
-                    value={newTask}
-                    onChange={(e) => {
-                        setNewTask(e.target.value);
-                        setErrorMessage("");
-                    }}
+                              type="text"
+                              placeholder="Nova tarefa"
+                              value={newTask}
+                              onChange={(e) => {
+                                  setNewTask(e.target.value);
+                                  setErrorMessage("");
+                              }}
                 />
 
                 {errorMessage && (
@@ -69,6 +78,7 @@ const TaskList = () => {
                 )}
 
                 <Button variant="primary" onClick={addTask} className={"ms-2"}>Adicionar</Button>
+
             </Form>
 
             <ListGroup className={""}>
@@ -94,8 +104,18 @@ const TaskList = () => {
                             <span className={"fw-bolder text-capitalize mb-1"}>{task.title}</span>
                             <span className={"small mb-2"}>Status: {task.completed ? "Concluída" : "Pendente"}</span>
                             <div>
+
+                                <Button
+                                    variant={task.completed ? "secondary" : "success"}
+                                    className="me-2"
+                                    onClick={() => toggleTaskStatus(task.id, task.completed)}
+                                >
+                                    {task.completed ? "Marcar como Pendente" : "Marcar como Concluída"}
+                                </Button>
+
                                 <Button variant="danger" size={"sim"}
                                         onClick={() => deleteTask(task.id)}>Deletar</Button>
+
                             </div>
                         </div>
                     </ListGroup.Item>

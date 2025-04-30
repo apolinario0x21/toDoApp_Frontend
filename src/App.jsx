@@ -1,17 +1,16 @@
-import { useState } from 'react'
+import {useState} from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import TaskList from "./components/TaskList.jsx";
+import NotFound from "./pages/NotFound.jsx";
+import {Route, Routes} from "react-router-dom";
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <TaskList />
-    </>
-  )
+export default function App() {
+    return (
+        <Routes>
+            <Route path="/api/tasks" element={<TaskList/>}/>
+            <Route path="*" element={<NotFound/>}/>
+        </Routes>
+    )
 }
-
-export default App
