@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {Button, Container, Form, ListGroup} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import {Spinner} from "react-bootstrap";
 
 const API_URL = "http://localhost:8080/api/tasks";
 
@@ -10,6 +10,7 @@ const TaskList = () => {
     const [tasks, setTasks] = useState([]);
     const [newTask, setNewTask] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [loading, setLoading] = useState(false);
 
     /* useEffect que permite executar efeitos colaterais em componentes */
     useEffect(() => {
@@ -17,9 +18,17 @@ const TaskList = () => {
     }, []) /*[], executa apenas uma vez quando o componente é montado*/
 
     const fetchTasks = () => {
-        axios.get(API_URL)
-            .then(response => setTasks(response.data))
-            .catch(error => console.error("Erro ao buscar tarefas: ", error));
+        setLoading(true);
+
+        setTimeout(() => {
+
+            axios.get(API_URL)
+                .then(response => setTasks(response.data))
+                .catch(error => console.error("Erro ao buscar tarefas: ", error))
+                .finally(() => setLoading(false));
+            // executa sempre, independente do sucesso ou falha da requisição
+
+        }, 0)
     }
     const addTask = () => {
         if (newTask.trim() === "") return;
@@ -57,9 +66,26 @@ const TaskList = () => {
             .catch(error => console.error("Erro ao atualizar tarefa: ", error));
     }
 
+    const handleEditTitle = async (task) => {
+
+        const newTitle = prompt("Novo título:", task.title);
+        if (newTitle && newTitle.trim() !== "") {
+            try {
+                await axios.put(`${API_URL}/${task.id}`, {title: newTitle});
+                fetchTasks();
+            } catch (error) {
+                console.error("Erro ao editar título da tarefa:", error);
+            }
+        }
+
+
+    };
+
 
     return (
         <Container className={"mt-5"}>
+
+
             <h2 className={"mb-4"}>Lista de Tarefas</h2>
 
             <Form className="d-flex flex-column mb-3">
@@ -77,51 +103,67 @@ const TaskList = () => {
                     <div className="text-danger mt-2">{errorMessage}</div>
                 )}
 
-                <Button variant="primary" onClick={addTask} className={"ms-2"}>Adicionar</Button>
+                <Button variant="primary" onClick={addTask} className={""}>Adicionar</Button>
 
             </Form>
 
-            <ListGroup className={""}>
-                {tasks.map(task => (
-                    <ListGroup.Item key={task.id} className={"rounded shadow-sm p-3 mb-2 bg-light text-dark"}>
-                        <div className={"d-flex flex-column"}>
+            {loading ? (
+                <div className={"text-center-my-4"}>
+                    <Spinner animation={"border"} role={"status"}/>
+                    <div className={"mt-2"}>Carregando tarefas...</div>
 
-                            <span className={"mb-1 small text-muted"}>UUID: <code>{task.id}</code></span>
+                </div>
+            ) : (
+                <ListGroup className={""}>
+                    {tasks.map(task => (
+                        <ListGroup.Item key={task.id} className={"rounded shadow-sm p-3 mb-2 bg-light text-dark"}>
+                            <div className={"d-flex flex-column"}>
 
-                            <span className={"mb-1 text-muted small"}>
+                                <span className={"mb-1 small text-muted"}>UUID: <code>{task.id}</code></span>
+
+                                <span className={"mb-1 text-muted small"}>
                                 Criada em: {
-                                new Date(task.createdAt).toLocaleDateString("pt-BR", {
-                                    day: "2-digit",
-                                    month: "2-digit",
-                                    year: "numeric",
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                    second: "2-digit",
-                                })
-                            }
+                                    new Date(task.createdAt).toLocaleDateString("pt-BR", {
+                                        day: "2-digit",
+                                        month: "2-digit",
+                                        year: "numeric",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                        second: "2-digit",
+                                    })
+                                }
                             </span>
 
-                            <span className={"fw-bolder text-capitalize mb-1"}>{task.title}</span>
-                            <span className={"small mb-2"}>Status: {task.completed ? "Concluída" : "Pendente"}</span>
-                            <div>
+                                <span className={"fw-bolder text-capitalize mb-1"}>{task.title}</span>
+                                <span
+                                    className={"small mb-2"}>Status: {task.completed ? "Concluída" : "Pendente"}</span>
+                                <div>
 
-                                <Button
-                                    variant={task.completed ? "secondary" : "success"}
-                                    className="me-2"
-                                    onClick={() => toggleTaskStatus(task.id, task.completed)}
-                                >
-                                    {task.completed ? "Marcar como Pendente" : "Marcar como Concluída"}
-                                </Button>
+                                    <Button
+                                        variant={task.completed ? "secondary" : "success"}
+                                        className="me-2"
+                                        onClick={() => toggleTaskStatus(task.id, task.completed)}
+                                    >
+                                        {task.completed ? "Marcar como Pendente" : "Marcar como Concluída"}
+                                    </Button>
 
-                                <Button variant="danger" size={"sim"}
-                                        onClick={() => deleteTask(task.id)}>Deletar</Button>
+                                    <Button
+                                        variant="danger" size={"sim"}
+                                        onClick={() => deleteTask(task.id)}>Deletar
+                                    </Button>
+                                    <button
+                                        onClick={() => handleEditTitle(task)}
+                                        className="btn btn-warning m-2"
+                                    >
+                                        Editar Título
+                                    </button>
 
+                                </div>
                             </div>
-                        </div>
-                    </ListGroup.Item>
-                ))}
-            </ListGroup>
-
+                        </ListGroup.Item>
+                    ))}
+                </ListGroup>
+            )}
         </Container>
     )
 }
