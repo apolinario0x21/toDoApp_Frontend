@@ -10,7 +10,6 @@ Um aplicativo web moderno para gerenciamento de tarefas, desenvolvido com React 
 
 Obs.: Backend em Java e Spring Boot encontra-se no repositório: [TodoApp-Backend](https://github.com/apolinario0x21/toDoApp)
 
----
 
 ## Sobre o Projeto
 ToDoApp oferece:
@@ -21,7 +20,6 @@ ToDoApp oferece:
 
 ![ToDoApp](./src/assets/todoapp.png)
 
----
 
 ## Tecnologias Utilizadas
 - React 
@@ -31,7 +29,6 @@ ToDoApp oferece:
 - React Modal - Para modais de confirmação e edição
 - Loading Spinner - Para animações de carregamento
 
----
 
 ## Componentes Principais
 
@@ -41,7 +38,7 @@ ToDoApp oferece:
 - EditTaskModal - Modal para edição de tarefas
 - DeleteTaskModal - Modal de confirmação para exclusão
 
----
+
 ## 🚀 Instalação e Uso
 ### Pré-requisitos
 
@@ -61,7 +58,6 @@ ToDoApp oferece:
 
     npm install ou yarn install
 
----
 
 ## 📂 Estrutura do Projeto
 O projeto segue uma arquitetura modular e escalável, organizada nas seguintes camadas:
@@ -89,8 +85,6 @@ O projeto segue uma arquitetura modular e escalável, organizada nas seguintes c
     - main.jsx
 
 
----
-
 ## ✅ Funcionalidades
 
 - Visualização de tarefas com detalhes como data de criação e status
@@ -110,7 +104,6 @@ O projeto segue uma arquitetura modular e escalável, organizada nas seguintes c
 - Drag and drop para reordenar tarefas
 - Vitest para testes unitários e de integração
 
----
 
 ## 🤝 Contribuição
 Se você quiser contribuir com este projeto, siga estas etapas:
