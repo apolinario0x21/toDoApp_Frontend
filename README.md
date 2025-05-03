@@ -19,7 +19,7 @@ ToDoApp oferece:
 - Feedback visual imediato
 - Arquitetura escalável e bem organizada
 
-![Tela do projeto](./src/assets/todoapp.png)
+![ToDoApp](./src/assets/todoapp.png)
 
 ---
 
